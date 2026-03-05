@@ -1,0 +1,198 @@
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: #f6f3ef;
+  color: #333;
+}
+
+.header {
+  text-align: center;
+  padding: 20px;
+  font-weight: 700;
+  font-size: 22px;
+}
+
+.hero {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.hero h2 {
+  color: #7a542c;
+  font-size: 28px;
+}
+
+.tagline {
+  margin: 10px 0;
+  font-weight: 600;
+}
+
+.products {
+  padding: 20px;
+}
+
+/* GRID 2 KOLOM RESPONSIVE */
+#product-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 20px;
+}
+
+/* CARD PREMIUM */
+.card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+/* HOVER ELEGAN */
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* WRAPPER GAMBAR */
+.card img {
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  will-change: transform;
+}
+
+/* ZOOM HALUS */
+.card:hover img {
+  transform: scale(1.08);
+}
+
+/* ISI CARD */
+.card h3 {
+  font-size: 15px;
+  padding: 10px 12px 0;
+  margin: 0;
+}
+
+.price {
+  padding: 5px 12px;
+  font-weight: 600;
+  color: #7a542c;
+}
+
+/* TOMBOL PESAN */
+.order-btn {
+  display: block;
+  margin: 10px 12px 15px;
+  padding: 10px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #c89b3c, #e6b85c);
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.order-btn:hover {
+  opacity: 0.9;
+}
+
+/* GLOW EFFECT HALUS */
+.card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle at top left,
+    rgba(200, 155, 60, 0.15),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: 0.4s;
+}
+
+.card:hover::after {
+  opacity: 1;
+}
+
+.card h3 {
+  margin: 10px 0 5px;
+}
+
+.price {
+  font-weight: 600;
+  color: #7a542c;
+  margin-bottom: 10px;
+}
+
+.order-btn {
+  display: block;
+  text-align: center;
+  padding: 12px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #c89b3c, #e6b85c);
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.admin-link {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #7a542c;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+/* TABLET */
+@media (min-width: 768px) {
+  #product-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* DESKTOP */
+@media (min-width: 1024px) {
+  #product-list {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+}
+
+.badge.best {
+  background: #d4af37;
+}
+
+.badge.promo {
+  background: #e74c3c;
+}
+
+.card {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease;
+}
+
+.card.show {
+  opacity: 1;
+  transform: translateY(0);
+}

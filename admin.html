@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - Dapur Nek Cua</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div
+      id="login-section"
+      style="padding: 30px; max-width: 400px; margin: auto"
+    >
+      <h2 style="text-align: center">Login Admin</h2>
+
+      <input
+        type="text"
+        id="username"
+        placeholder="Username"
+        style="width: 100%; padding: 10px; margin: 10px 0"
+      />
+
+      <input
+        type="password"
+        id="password"
+        placeholder="Password"
+        style="width: 100%; padding: 10px; margin: 10px 0"
+      />
+
+      <button
+        onclick="login()"
+        style="
+          width: 100%;
+          padding: 12px;
+          background: #7a542c;
+          border: none;
+          border-radius: 10px;
+          color: white;
+        "
+      >
+        Login
+      </button>
+    </div>
+
+    <div
+      id="admin-section"
+      style="display: none; padding: 30px; max-width: 500px; margin: auto"
+    >
+      <h2 style="text-align: center">Admin Panel</h2>
+
+      <button
+        onclick="logout()"
+        style="
+          float: right;
+          background: #d9534f;
+          color: white;
+          border: none;
+          padding: 6px 10px;
+          border-radius: 6px;
+        "
+      >
+        Logout
+      </button>
+
+      <input
+        type="text"
+        id="nama"
+        placeholder="Nama Produk"
+        style="width: 100%; padding: 10px; margin: 10px 0"
+      />
+
+      <input
+        type="number"
+        id="harga"
+        placeholder="Harga"
+        style="width: 100%; padding: 10px; margin: 10px 0"
+      />
+
+      <input
+        type="text"
+        id="gambar"
+        placeholder="Nama file gambar"
+        style="width: 100%; padding: 10px; margin: 10px 0"
+      />
+
+      <button
+        onclick="addProduct()"
+        style="
+          width: 100%;
+          padding: 12px;
+          background: #c89b3c;
+          border: none;
+          border-radius: 10px;
+          color: white;
+        "
+      >
+        Tambah Produk 💛
+      </button>
+
+      <hr style="margin: 30px 0" />
+
+      <h3>Daftar Produk</h3>
+      <div id="admin-product-list"></div>
+
+      <select id="badge" style="width: 100%; padding: 10px; margin: 10px 0">
+        <option value="">Tanpa Badge</option>
+        <option value="best">Best Seller</option>
+        <option value="promo">Promo</option>
+      </select>
+    </div>
+
+    <script>
+      let editIndex = -1;
+
+      document.addEventListener("DOMContentLoaded", function () {
+        checkLogin();
+        loadAdminProducts();
+      });
+
+      const ADMIN_USERNAME = "PAPABy";
+      const ADMIN_PASSWORD = "140649";
+
+      function login() {
+        const user = document.getElementById("username").value;
+        const pass = document.getElementById("password").value;
+
+        if (user === ADMIN_USERNAME && pass === ADMIN_PASSWORD) {
+          localStorage.setItem("isLoggedIn", "true");
+          checkLogin();
+        } else {
+          alert("Username atau Password salah ❌");
+        }
+      }
+
+      function logout() {
+        localStorage.removeItem("isLoggedIn");
+        checkLogin();
+      }
+
+      function checkLogin() {
+        const status = localStorage.getItem("isLoggedIn");
+
+        if (status === "true") {
+          document.getElementById("login-section").style.display = "none";
+          document.getElementById("admin-section").style.display = "block";
+        } else {
+          document.getElementById("login-section").style.display = "block";
+          document.getElementById("admin-section").style.display = "none";
+        }
+      }
+
+      function getProducts() {
+        return JSON.parse(localStorage.getItem("products")) || [];
+      }
+
+      function saveProducts(data) {
+        localStorage.setItem("products", JSON.stringify(data));
+      }
+
+      function addProduct() {
+        const nama = document.getElementById("nama").value;
+        const harga = document.getElementById("harga").value;
+        const gambar = document.getElementById("gambar").value;
+        const badgeEl = document.getElementById("badge");
+        const badge = badgeEl ? badgeEl.value : "";
+
+        if (!nama || !harga || !gambar) {
+          alert("Lengkapi semua data 😊");
+          return;
+        }
+
+        const produk = JSON.parse(localStorage.getItem("products")) || [];
+
+        if (editIndex === -1) {
+          // MODE TAMBAH
+          produk.push({ nama, harga, gambar, badge });
+        } else {
+          // MODE EDIT
+          produk[editIndex] = { nama, harga, gambar, badge };
+          editIndex = -1;
+          document.querySelector("button[onclick='addProduct()']").innerText =
+            "Tambah Produk 💛";
+        }
+
+        localStorage.setItem("products", JSON.stringify(produk));
+
+        resetForm();
+        loadAdminProducts();
+      }
+
+      function deleteProduct(index) {
+        const produk = getProducts();
+        produk.splice(index, 1);
+        saveProducts(produk);
+        loadAdminProducts();
+      }
+
+      function editProduct(index) {
+        const produk = JSON.parse(localStorage.getItem("products")) || [];
+        const item = produk[index];
+
+        document.getElementById("nama").value = item.nama;
+        document.getElementById("harga").value = item.harga;
+        document.getElementById("gambar").value = item.gambar;
+
+        const badgeEl = document.getElementById("badge");
+        if (badgeEl) {
+          badgeEl.value = item.badge || "";
+        }
+
+        editIndex = index;
+
+        document.querySelector("button[onclick='addProduct()']").innerText =
+          "Update Produk ✏";
+      }
+
+      function loadAdminProducts() {
+        const container = document.getElementById("admin-product-list");
+        if (!container) return;
+
+        const produk = getProducts();
+
+        container.innerHTML = "";
+
+        produk.forEach((item, index) => {
+          container.innerHTML += `
+  <div style="background:#fff;padding:10px;margin-bottom:10px;border-radius:10px;">
+    <strong>${item.nama}</strong><br>
+    Rp ${Number(item.harga).toLocaleString("id-ID")} <br><br>
+
+    <button onclick="editProduct(${index})"
+      style="background:#3498db;color:white;border:none;padding:6px 10px;border-radius:6px;margin-right:5px;">
+      Edit
+    </button>
+
+    <button onclick="deleteProduct(${index})"
+      style="background:#d9534f;color:white;border:none;padding:6px 10px;border-radius:6px;">
+      Hapus
+    </button>
+  </div>
+`;
+        });
+      }
+
+      function resetForm() {
+        document.getElementById("nama").value = "";
+        document.getElementById("harga").value = "";
+        document.getElementById("gambar").value = "";
+      }
+    </script>
+  </body>
+</html>
